@@ -16,7 +16,7 @@ class database {
         );
     }
 
-    viewDepartments() {
+    searchDepartments() {
         return this.connection.promise().query(
             "SELECT department.id, department.name FROM department;"
         );
@@ -42,13 +42,13 @@ class database {
         );
     }
 
-    viewRoles() {
+    searchRoles() {
         return this.connection.promise().query(
             "SELECT role.id, role.title, department.name AS department, role.salary FROM role LEFT JOIN department on role.department_id = department.id;"
         );
     }
 
-    viewManagers(employeeId) {
+    searchManagers(employeeId) {
         return this.connection.promise().query(
             "SELECT id, first_name, last_name FROM employee WHERE id != ?", employeeId
         );
@@ -60,7 +60,7 @@ class database {
         );
     }
 
-    createEmployee(employee){
+    newEmployee(employee){
         return this.connection.promise().query("INSERT INTO employee SET ?", employee);
     }
 
@@ -70,20 +70,20 @@ class database {
         );
     }
 
-    viewEmployees() {
+    searchEmployees() {
         return this.connection.promise().query(
             "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ' , manager.last_name) AS manager FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id;"
         );
     }
 
-    viewEmployeesByDepartment(departmentId) {
+    searchEmployeesByDepartment(departmentId) {
         return this.connection.promise().query(
             "SELECT employee.id, employee.first_name, employee.last_name, role.title FROM employee LEFT JOIN on employee.role_id = role.id LEFT JOIN department department on role.department_id = department.id WHERE department.id = ?;",
             departmentId
         );
     }
 
-    viewEmployeesByManager(managerId) {
+    searchEmployeesByManager(managerId) {
         return this.connection.promise().query(
             "SELECT employee.id, employee.first_name, employee.last_name, department.name AS department, role.title FROM employee LEFT JOIN role on role.id = employee.role_id LEFT JOIN department ON department.id = role.department_id WHERE manager_id = ?;",
             managerId
